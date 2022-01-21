@@ -134,8 +134,12 @@ class WOE(BaseEstimator, TransformerMixin):
                                             max_bins=self.mono_max_bins, force_bins=self.mono_force_bins,
                                             cardinality_cutoff=self.mono_cardinality_cutoff, 
                                             prefix=self.mono_prefix, custom_binning=self.mono_custom_binning)
-            X = self.mono_bin_clf.fit_transform(X, y)
-            self.mono_custom_binning = self.mono_bin_clf.bins
+             if self.mono_custom_binning:
+                X = self.mono_bin_clf.transform(X)
+                self.mono_custom_binning = self.mono_bin_clf.bins
+            else:
+                X = self.mono_bin_clf.fit_transform(X, y)
+                self.mono_custom_binning = self.mono_bin_clf.bins
         
         #identify the variables to tranform and assign the bin mapping dictionary
         self.woe_bins = {} #bin mapping
